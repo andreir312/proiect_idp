@@ -1,9 +1,17 @@
-version: "3"
-
+---
+networks:
+  form_redis_net: ~
 services:
   form_app:
+    deploy:
+      replicas: 4
     image: "andreirar24/proiect_idp:form_app"
+    networks:
+      - form_redis_net
     ports:
       - "8000:8000"
   redis:
     image: "redis:alpine"
+    networks:
+      - form_redis_net
+version: "3"

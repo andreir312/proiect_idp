@@ -1,8 +1,16 @@
 from flask import Flask, request, render_template
 from redis import Redis
+import time
 
 app = Flask(__name__)
-redis = Redis(host="redis", port=6379)
+while True:
+    try:
+        redis = Redis(host="redis", port=6379)
+    except:
+        time.sleep(2)
+        continue
+    else:
+        break
 
 
 @app.route("/")
