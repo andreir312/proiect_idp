@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 
 services:
   form_app:
-    image: form_app:1.0.0
+    image: "andreirar24/proiect_idp:form_app"
     ports:
       - "8000:8000"
   redis:
-    image: redis:6.0-rc1-alpine3.11
+    image: "redis:alpine"
