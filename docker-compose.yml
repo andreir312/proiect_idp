@@ -7,7 +7,8 @@ networks:
 services:
   grafana:
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
     image: "andreirar24/proiect_idp:grafana"
     networks:
       - postgres_grafana_net
@@ -15,10 +16,11 @@ services:
       - "3000:3000"
   postgres:
     deploy:
-      mode: global
+      mode: replicated
       placement:
         constraints:
           - "node.role == manager"
+      replicas: 1
     image: "andreirar24/proiect_idp:postgres"
     networks:
       - postgres_grafana_net
@@ -27,7 +29,8 @@ services:
       - "postgres_vol:/var/lib/postgresql/data"
   redis:
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
     image: "redis:alpine"
     networks:
       - redis_work_net
