@@ -1,17 +1,54 @@
 ---
 networks:
-  form_redis_net: ~
+  postgres_grafana_net: ~
+  redis_work_net: ~
+  vote_redis_net: ~
+  work_postgres_net: ~
 services:
-  form_app:
+  grafana:
     deploy:
-      replicas: 4
-    image: "andreirar24/proiect_idp:form_app"
+      mode: global
+    image: "andreirar24/proiect_idp:grafana"
     networks:
-      - form_redis_net
+      - postgres_grafana_net
     ports:
-      - "8000:8000"
+      - "3000:3000"
+  postgres:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - "node.role == manager"
+    image: "andreirar24/proiect_idp:postgres"
+    networks:
+      - postgres_grafana_net
+      - work_postgres_net
+    volumes:
+      - "postgres_vol:/var/lib/postgresql/data"
   redis:
+    deploy:
+      mode: global
     image: "redis:alpine"
     networks:
-      - form_redis_net
+      - redis_work_net
+      - vote_redis_net
+  vote_app:
+    deploy:
+      mode: replicated
+      replicas: 2
+    image: "andreirar24/proiect_idp:vote_app"
+    networks:
+      - vote_redis_net
+    ports:
+      - "8000:8000"
+  work_app:
+    deploy:
+      mode: replicated
+      replicas: 2
+    image: "andreirar24/proiect_idp:work_app"
+    networks:
+      - redis_work_net
+      - work_postgres_net
 version: "3"
+volumes:
+  postgres_vol: ~
